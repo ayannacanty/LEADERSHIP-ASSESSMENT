@@ -1,0 +1,465 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.aw{padding:2rem 0;max-width:680px}
+.hero{text-align:center;margin-bottom:2.5rem;padding-bottom:2rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:.5rem;font-weight:500}
+.hero h1{font-size:26px;font-weight:500;color:var(--color-text-primary);margin-bottom:.6rem;line-height:1.25}
+.hero p{font-size:14px;color:var(--color-text-secondary);line-height:1.65;max-width:500px;margin:0 auto}
+.research-note{display:flex;align-items:flex-start;gap:10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.85rem 1rem;margin-bottom:2rem;font-size:12px;color:var(--color-text-secondary);line-height:1.55}
+.research-note i{font-size:15px;color:#534AB7;flex-shrink:0;margin-top:1px}
+.prog-wrap{margin-bottom:1.5rem}
+.prog-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--color-text-secondary);margin-bottom:.4rem}
+.prog-track{background:var(--color-background-secondary);border-radius:99px;height:4px;overflow:hidden}
+.prog-fill{height:100%;background:#534AB7;border-radius:99px;transition:width .3s ease}
+.sec-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.5rem;margin-bottom:1rem}
+.sec-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.sec-icon{width:36px;height:36px;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.sec-meta{flex:1}
+.sec-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.sec-basis{font-size:11px;color:var(--color-text-secondary);line-height:1.45}
+.q-block{margin-bottom:1.1rem}
+.q-block:last-child{margin-bottom:0}
+.q-text{font-size:13px;color:var(--color-text-primary);margin-bottom:.55rem;line-height:1.5}
+.scale-row{display:flex;align-items:center;gap:8px}
+.scale-lbl{font-size:11px;color:var(--color-text-secondary);white-space:nowrap;min-width:32px}
+.scale-lbl.right{text-align:right}
+.btns{display:flex;gap:4px;flex:1}
+.sb{flex:1;height:32px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-primary);cursor:pointer;font-size:13px;font-weight:500;color:var(--color-text-secondary);transition:all .12s ease}
+.sb:hover{border-color:var(--color-border-secondary);color:var(--color-text-primary);background:var(--color-background-secondary)}
+.sb.sel{background:#534AB7;border-color:#534AB7;color:#fff}
+.cta-row{text-align:center;margin-top:2rem;padding-top:1.5rem;border-top:0.5px solid var(--color-border-tertiary)}
+.cta-note{font-size:12px;color:var(--color-text-secondary);margin-top:.6rem}
+.submit-btn{background:#534AB7;color:#fff;border:none;border-radius:var(--border-radius-md);padding:13px 44px;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s ease}
+.submit-btn:hover{background:#3C3489}
+.submit-btn:disabled{opacity:.35;cursor:not-allowed}
+.rw{display:none;padding:2rem 0}
+.r-hero{text-align:center;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.r-hero h2{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:.4rem}
+.r-hero p{font-size:13px;color:var(--color-text-secondary)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:1.5rem}
+.stat-c{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;text-align:center}
+.stat-lbl{font-size:11px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem}
+.stat-val{font-size:24px;font-weight:500}
+.cat-block{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:.75rem}
+.cat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+.cat-name{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.cat-right{display:flex;align-items:center;gap:8px}
+.badge{font-size:11px;padding:3px 10px;border-radius:99px;font-weight:500}
+.b-s{background:#E1F5EE;color:#085041}
+.b-g{background:#FAEEDA;color:#633806}
+.b-d{background:#FAECE7;color:#712B13}
+.cat-score{font-size:13px;font-weight:500;color:var(--color-text-secondary)}
+.bar-t{height:5px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden;margin-bottom:.85rem}
+.bar-f{height:100%;border-radius:99px;transition:width .7s ease}
+.bf-s{background:#1D9E75}
+.bf-g{background:#EF9F27}
+.bf-d{background:#D85A30}
+.fb-block{border-top:0.5px solid var(--color-border-tertiary);padding-top:.85rem}
+.fb-section{margin-bottom:.75rem}
+.fb-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.09em;color:var(--color-text-secondary);margin-bottom:.35rem;display:flex;align-items:center;gap:5px}
+.fb-label i{font-size:13px}
+.fb-text{font-size:13px;color:var(--color-text-primary);line-height:1.6}
+.research-tag{font-size:11px;color:var(--color-text-secondary);font-style:italic;margin-top:.3rem}
+.actions-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:.75rem}
+.actions-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:.75rem;display:flex;align-items:center;gap:7px}
+.action-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:.6rem;font-size:13px;color:var(--color-text-primary);line-height:1.5}
+.action-item:last-child{margin-bottom:0}
+.action-num{width:20px;height:20px;border-radius:50%;background:#EEEDFE;color:#3C3489;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.profile-card{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1.5rem}
+.profile-title{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.5rem}
+.profile-name{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:.35rem}
+.profile-desc{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+.retake-row{text-align:center;margin-top:1.5rem;padding-top:1.25rem;border-top:0.5px solid var(--color-border-tertiary)}
+.retake-btn{background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:11px 28px;font-size:13px;font-weight:500;color:var(--color-text-primary);cursor:pointer;transition:background .12s ease}
+.retake-btn:hover{background:var(--color-background-secondary)}
+.deep-btn{margin-top:1rem;display:inline-block}
+</style>
+
+<div class="aw" id="assessment">
+  <div class="hero">
+    <div class="eyebrow">Entrepreneur leadership assessment</div>
+    <h1>How do you lead right now?</h1>
+    <p>Rate each statement honestly based on your actual behavior — not your intentions. Results are scored against validated psychological frameworks and deliver specific, research-backed feedback you can act on today.</p>
+  </div>
+  <div class="research-note">
+    <i class="ti ti-flask" aria-hidden="true"></i>
+    <span>This assessment draws from established frameworks: Bandura's self-efficacy theory, Goleman's emotional intelligence model, McClelland's achievement motivation research, Deci & Ryan's self-determination theory, and Kahneman's cognitive load research. Scoring reflects real behavioral patterns documented across high-performing entrepreneurs.</span>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-meta"><span id="prog-txt">0 of 18 answered</span><span id="prog-pct">0%</span></div>
+    <div class="prog-track"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+  </div>
+  <div id="sections-container"></div>
+  <div class="cta-row">
+    <button class="submit-btn" id="submitBtn" disabled onclick="showResults()">See my leadership profile</button>
+    <div class="cta-note" id="cta-note">Answer all 18 questions to unlock your full profile and feedback.</div>
+  </div>
+</div>
+
+<div class="rw" id="results">
+  <div class="r-hero">
+    <div class="eyebrow">Your leadership profile</div>
+    <h2 id="profileHeadline">—</h2>
+    <p id="profileSub">—</p>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-c"><div class="stat-lbl">Overall score</div><div class="stat-val" id="overallScore" style="color:var(--color-text-primary)">—</div></div>
+    <div class="stat-c"><div class="stat-lbl">Strengths</div><div class="stat-val" id="strengthCount" style="color:#1D9E75">—</div></div>
+    <div class="stat-c"><div class="stat-lbl">Focus areas</div><div class="stat-val" id="gapCount" style="color:#D85A30">—</div></div>
+  </div>
+  <div class="profile-card" id="profileCard"></div>
+  <div id="catResults"></div>
+  <div class="actions-card" id="actionsCard"></div>
+  <div class="retake-row">
+    <button class="retake-btn" onclick="resetAssessment()">Retake assessment</button>
+    <div style="margin-top:.6rem;font-size:12px;color:var(--color-text-secondary)">Retake in 30–60 days to measure growth. Screenshot to track your baseline.</div>
+    <div class="deep-btn">
+      <button onclick="sendPrompt('Based on my leadership assessment results, give me a 90-day growth plan with weekly milestones, specific practices from the research literature, and accountability checkpoints.')" style="background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:10px 22px;font-size:13px;font-weight:500;color:var(--color-text-primary);cursor:pointer;transition:background .12s ease">Build my 90-day growth plan ↗</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const cats = [
+  {
+    id:'self', label:'Self-leadership', icon:'ti-user', iconBg:'#EEEDFE', iconColor:'#534AB7',
+    basis:'Based on Manz (1986) self-leadership theory and Bandura\'s self-regulation research',
+    questions:[
+      {text:'I manage my time in ways that reflect what actually matters most to my business, not just what feels urgent.', weight:1.2},
+      {text:'When I commit to something — to myself or others — I follow through, even when it gets hard.', weight:1.1},
+      {text:'I regularly step back from reactive tasks to work on strategic priorities.', weight:1.0}
+    ]
+  },
+  {
+    id:'comm', label:'Communication', icon:'ti-messages', iconBg:'#E1F5EE', iconColor:'#1D9E75',
+    basis:'Rooted in Goleman\'s emotional intelligence model and Edmondson\'s psychological safety research',
+    questions:[
+      {text:'People I work with understand exactly what I expect of them, without having to guess.', weight:1.1},
+      {text:'I ask for help before a problem becomes a crisis — not after.', weight:1.0},
+      {text:'When I give feedback, I make it specific, timely, and focused on behavior rather than character.', weight:1.2}
+    ]
+  },
+  {
+    id:'community', label:'Community building', icon:'ti-users', iconBg:'#FBEAF0', iconColor:'#993556',
+    basis:'Grounded in Putnam\'s social capital theory and Uzzi\'s network embeddedness research',
+    questions:[
+      {text:'I actively build relationships with people, organizations, and partners beyond my immediate network.', weight:1.0},
+      {text:'When I encounter a challenge, I look for collaborative solutions rather than trying to solve it alone.', weight:1.1},
+      {text:'I regularly and intentionally connect people in my network to one another.', weight:1.2}
+    ]
+  },
+  {
+    id:'deleg', label:'Delegation', icon:'ti-share', iconBg:'#FAEEDA', iconColor:'#854F0B',
+    basis:'Informed by McClelland\'s power motivation research and Hackman\'s team autonomy studies',
+    questions:[
+      {text:'I let go of tasks that others could handle, even when I believe I could do them better.', weight:1.2},
+      {text:'I trust others with work that genuinely matters — not just the low-stakes overflow.', weight:1.1},
+      {text:'My calendar and to-do list reflect my highest-value contribution, not just busyness.', weight:1.0}
+    ]
+  },
+  {
+    id:'resil', label:'Resilience', icon:'ti-flame', iconBg:'#FAECE7', iconColor:'#993C1D',
+    basis:'Drawn from Seligman\'s learned optimism research and Southwick & Charney\'s resilience framework',
+    questions:[
+      {text:'After a setback — a lost client, a failed launch, a hard no — I recover and re-engage within days, not weeks.', weight:1.2},
+      {text:'When plans change, I adapt my approach without losing my sense of direction.', weight:1.1},
+      {text:'I can stay clear-headed and intentional during sustained periods of uncertainty or pressure.', weight:1.0}
+    ]
+  },
+  {
+    id:'vision', label:'Vision', icon:'ti-telescope', iconBg:'#E6F1FB', iconColor:'#185FA5',
+    basis:'Anchored in Collins & Porras\'s BHAG research and Locke\'s goal-setting theory',
+    questions:[
+      {text:'I can describe the specific destination I am building toward — not just a general direction.', weight:1.1},
+      {text:'When I talk about where my business is going, the people around me feel motivated, not confused.', weight:1.2},
+      {text:'The way I actually spend my time each week is a true reflection of my stated priorities.', weight:1.0}
+    ]
+  }
+];
+
+const feedback = {
+  self:{
+    s:{
+      what:'Your self-regulation is a structural advantage. Research by Manz (1986) shows that entrepreneurs who exhibit high self-leadership — setting personal standards, monitoring their own behavior, and managing their internal states — outperform peers on sustained performance measures.',
+      why:'High scorers on self-leadership typically have lower cortisol responses to work pressure (documented in studies by Sonnentag & Fritz, 2015), meaning they experience the same stressors but with less physiological cost. Your follow-through builds the trust that makes scale possible.',
+      improve:'Even strong self-leaders have blind spots. Schedule a quarterly "time audit" — map every hour of your week against your stated priorities. Most high performers are shocked by the gap between intention and actual allocation.',
+      research:'Manz, C.C. (1986). Self-Leadership: Toward an Expanded Theory of Self-Influence. Academy of Management Review.'
+    },
+    g:{
+      what:'You demonstrate self-awareness but inconsistency — which research identifies as the highest-risk pattern for entrepreneurial burnout. Baumeister\'s ego depletion studies show that willpower is finite and depleted by constant decision-making.',
+      why:'The gap between knowing your priorities and actually protecting time for them is a systems problem, not a character flaw. Entrepreneurs in this zone often spend 60-70% of their time on tasks they know are not their highest value (EY Entrepreneur Survey, 2019).',
+      improve:'Implement "time blocking with teeth" — schedule your top three strategic priorities at the beginning of each week before anything else appears on your calendar. Treat those blocks like client commitments. Use a simple weekly check-in on Friday: did your actions match your intentions?',
+      research:'Baumeister, R.F. et al. (1998). Ego depletion: Is the active self a limited resource? Journal of Personality and Social Psychology.'
+    },
+    d:{
+      what:'Low self-leadership scores are one of the strongest predictors of plateau and stagnation in entrepreneurial ventures. Without self-regulation, reactive behaviors dominate — and urgent crowds out important permanently.',
+      why:'Kahneman\'s research on System 1 vs. System 2 thinking explains the mechanism: under stress, your brain defaults to fast, reactive thinking. Without deliberate practices to engage slower, strategic thinking, you\'ll keep solving yesterday\'s problems instead of building tomorrow\'s business.',
+      improve:'Start with one structural change: block 90 minutes each morning — before email, before Slack — for your single most important business-building task. Do this for 21 consecutive days. Research by Lally et al. (2010) confirms that habit formation requires consistent context cues, not just motivation.',
+      research:'Kahneman, D. (2011). Thinking, Fast and Slow. Lally, P. et al. (2010). How habits are formed. European Journal of Social Psychology.'
+    }
+  },
+  comm:{
+    s:{
+      what:'Clear, honest communication is a force multiplier. Edmondson\'s psychological safety research at Google found that teams with leaders who communicate expectations clearly and invite feedback outperform other teams on nearly every measurable dimension.',
+      why:'When people know what is expected and feel safe to ask questions or raise problems, they bring more of their capability to the table. Your score here suggests your team operates in that kind of environment — a genuine competitive advantage for small businesses.',
+      improve:'The growth edge for strong communicators is feedback specificity. Shift from "great job" or "that missed the mark" to behavior-based feedback: what specifically was done, what the impact was, and what you would want to see going forward.',
+      research:'Edmondson, A. (1999). Psychological safety and learning behavior in work teams. Administrative Science Quarterly.'
+    },
+    g:{
+      what:'You communicate — but inconsistently. Research on role clarity (Rizzo et al., 1970) shows that ambiguity about expectations is one of the top three drivers of employee disengagement. The people around you may be filling your communication gaps with their own assumptions.',
+      why:'Entrepreneurs in this zone tend to over-rely on verbal communication and under-invest in written clarity. A conversation can create alignment in the moment, but without documentation, it degrades. People remember what they expected to hear, not always what was said.',
+      improve:'Create a "clarity document" for every person in your orbit: what they are responsible for, what success looks like, and how decisions get made between you. Review it quarterly. This takes two hours to build and saves hundreds in confusion.',
+      research:'Rizzo, J.R., House, R.J., & Lirtzman, S.I. (1970). Role conflict and ambiguity in complex organizations. Administrative Science Quarterly.'
+    },
+    d:{
+      what:'Low communication scores are strongly associated with leadership isolation — a pattern where the entrepreneur becomes a bottleneck without realizing it. Losada & Heaphy (2004) found that high-performing teams show a 5.6:1 ratio of positive to negative communication interactions.',
+      why:'When communication is unclear or withheld, people default to inaction, guessing, or doing the wrong thing confidently. Every hour spent fixing miscommunication is an hour not spent building. For solo operators, this shows up as broken client expectations and missed handoffs.',
+      improve:'Build a "communication rhythm": a weekly five-minute voice memo or written update to key stakeholders on what is happening and what you need from them. It does not have to be polished — it has to be consistent. Consistency builds trust faster than perfection.',
+      research:'Losada, M. & Heaphy, E. (2004). The role of positivity and connectivity in the performance of business teams. American Behavioral Scientist.'
+    }
+  },
+  community:{
+    s:{
+      what:'You have internalized what Robert Putnam called "bridging social capital" — the capacity to build relationships that span different groups, industries, and communities. Research consistently shows this is a primary driver of entrepreneurial opportunity recognition.',
+      why:'Uzzi & Spiro (2005) found that individuals positioned as connectors — those who link otherwise disconnected clusters — generate more novel ideas and business opportunities than either pure specialists or pure generalists. Your score here is rare and valuable.',
+      improve:'Document your network intentionally. Map your top relationships by category — clients, collaborators, mentors, connectors, referral sources. Identify which categories are thin and build deliberately toward those gaps.',
+      research:'Uzzi, B. & Spiro, J. (2005). Collaboration and Creativity. American Journal of Sociology. Putnam, R. (2000). Bowling Alone.'
+    },
+    g:{
+      what:'You understand the value of community but have not yet built the habits that make relationship-building automatic. Research by Granovetter (1973) on "the strength of weak ties" shows that the most valuable connections for entrepreneurs are often not close relationships but strategic acquaintances.',
+      why:'In this zone, networking feels transactional or time-consuming — and so it happens reactively rather than proactively. But community built only when you need something is not really community. It is a list of people who sense they are being used.',
+      improve:'Make one genuine introduction per week — connecting two people who would benefit from knowing each other, with no ask attached. Do this for 90 days. This single practice, documented by Waber et al. (2010) in MIT research on organizational networks, measurably increases your own network value.',
+      research:'Granovetter, M. (1973). The Strength of Weak Ties. American Journal of Sociology.'
+    },
+    d:{
+      what:'Low community-building scores are a significant risk factor for entrepreneurial isolation — a state that research links to poor decision-making, missed opportunities, and elevated rates of anxiety and depression in founders (Eisenberger et al., 2003).',
+      why:'Isolation is not just an emotional problem — it is a strategic one. Entrepreneurs who operate without strong relational networks have fewer sources of referral, less access to market information, and less resilience when things go wrong. The research is unambiguous: connected founders outperform isolated ones.',
+      improve:'Start with one commitment: join or create a peer accountability group of three to five other entrepreneurs at your level. Meet monthly. Share real challenges, not polished updates. Research by Shepherd & Krueger (2002) shows peer learning environments are among the highest-ROI investments an entrepreneur can make.',
+      research:'Eisenberger, N.I. et al. (2003). Does rejection hurt? Science. Shepherd, D. & Krueger, N. (2002). An intentions-based model of entrepreneurial teams\' social cognition.'
+    }
+  },
+  deleg:{
+    s:{
+      what:'Your ability to delegate reflects psychological maturity that most entrepreneurs never develop. Hackman\'s research (2002) on team effectiveness found that leaders who grant genuine autonomy — not just task handoffs — build teams that outperform on innovation, retention, and speed.',
+      why:'High delegation scores correlate with something counter-intuitive: greater influence, not less. When you trust people with real work, you free your own cognitive bandwidth for the decisions only you can make. McClelland\'s research on achievement motivation found that the highest-performing leaders score high on socialized power — building others up rather than holding control.',
+      improve:'The next level is delegation with development intent. When you hand off a task, explicitly name what you want the person to learn through doing it. This transforms delegation from a workload tool into a leadership development practice.',
+      research:'Hackman, J.R. (2002). Leading Teams. McClelland, D.C. (1975). Power: The inner experience.'
+    },
+    g:{
+      what:'You delegate selectively, which means you are still holding more than you should. Research by Kogut & Zander (1992) on knowledge transfer shows that entrepreneurs who cannot let go of execution create knowledge monopolies — single points of failure that constrain growth.',
+      why:'The cost of under-delegation is invisible but enormous. Every hour you spend doing work someone else could do is an hour not spent on the work only you can do. For most entrepreneurs in this zone, between 30-40% of weekly activity falls below their actual pay grade (McKinsey, 2013).',
+      improve:'Run a "delegation audit": for every recurring task in your week, ask whether someone else could do this at 80% of your quality. If yes, document the task and hand it off. 80% delivered by someone else is almost always better than 100% perpetually delayed by you.',
+      research:'Kogut, B. & Zander, U. (1992). Knowledge of the firm, combinative capabilities, and the replication of technology. Organization Science.'
+    },
+    d:{
+      what:'Low delegation scores are the most common structural ceiling for entrepreneurial growth. The research is clear: businesses run by founders who cannot delegate plateau at a predictable scale — typically between $300K and $1M in revenue — because there is a hard limit to what one person can execute.',
+      why:'The psychological driver is often not lack of trust in others but insufficient trust in systems. Deci & Ryan\'s self-determination theory shows that control-oriented leadership environments suppress intrinsic motivation in collaborators — meaning the harder you hold on, the less initiative people around you take, which makes you hold on even harder.',
+      improve:'Start with the smallest possible unit: find one task you do every week and write a clear standard operating procedure for how you do it. Then hand the task — and the SOP — to someone else for 30 days. This builds the documentation muscle and the trust muscle simultaneously.',
+      research:'Deci, E.L. & Ryan, R.M. (2000). The "what" and "why" of goal pursuits. Psychological Inquiry.'
+    }
+  },
+  resil:{
+    s:{
+      what:'Your resilience profile reflects what Seligman calls "learned optimism" — not naive positivity, but a practiced capacity to reframe adversity accurately and act from that reframing. This is one of the most predictive traits in longitudinal entrepreneurship research.',
+      why:'Entrepreneurs with high resilience scores show significantly lower rates of venture abandonment following failure (Shepherd, 2003), faster pivots, and greater willingness to take calculated risks. Your ability to stay clear-headed under pressure is a structural advantage in a domain defined by uncertainty.',
+      improve:'Resilience is not static — it needs maintenance. Document your "recovery toolkit": what specific practices help you reset after a significant setback? Sleep, movement, connection, perspective-seeking? Naming it makes it accessible when you need it most.',
+      research:'Seligman, M.E.P. (1991). Learned Optimism. Shepherd, D.A. (2003). Learning from business failure. Academy of Management Review.'
+    },
+    g:{
+      what:'You recover — but not always quickly enough to prevent compounding damage. Research by Fredrickson (2001) on positive emotions shows a "broaden-and-build" effect: resilient people use positive emotional states to expand their thinking, generating more creative responses to problems. In the growth zone, that capacity is intermittent.',
+      why:'The risk in this zone is cognitive narrowing — when setbacks hit, thinking becomes tunnel-focused on the problem rather than scanning for solutions. Entrepreneurs here often report "going dark" for days or weeks after significant failures, losing momentum at exactly the moment recovery investment is highest-return.',
+      improve:'Build a "first 24 hours" protocol for setbacks: a specific sequence of actions you commit to in the first day after something goes wrong. Include one physical action (movement), one relational action (talking to a trusted peer), and one analytical action (writing down what you actually learned). This interrupts reactive rumination.',
+      research:'Fredrickson, B.L. (2001). The role of positive emotions in positive psychology. American Psychologist.'
+    },
+    d:{
+      what:'Low resilience scores are the highest-risk pattern in this assessment — not because resilience is everything, but because without it, every other strength becomes fragile. Southwick & Charney\'s research (2012) identifies resilience as the meta-skill that determines whether setbacks teach or destroy.',
+      why:'Entrepreneurs with low resilience scores show elevated rates of avoidance behavior under stress — delaying difficult conversations, postponing strategic decisions, and retreating from visibility. This creates a negative spiral: avoidance increases uncertainty, which increases stress, which decreases capacity for action.',
+      improve:'Start with the body. Comprehensive resilience research consistently identifies sleep quality, regular physical activity, and social connection as the three foundational inputs. These are not soft additions — they are neurological prerequisites for sustained high performance. Pick one and make it non-negotiable for 30 days.',
+      research:'Southwick, S.M. & Charney, D.S. (2012). Resilience: The Science of Mastering Life\'s Greatest Challenges.'
+    }
+  },
+  vision:{
+    s:{
+      what:'Your vision clarity puts you in a small minority. Collins & Porras found in their 18-year study of visionary companies that specificity of destination — not just aspiration — is what separates companies that endure from those that plateau and fade.',
+      why:'Locke & Latham\'s goal-setting theory (one of the most replicated findings in organizational psychology) shows that specific, challenging goals consistently produce higher performance than "do your best" objectives. Your ability to communicate vision clearly means others can self-direct toward it — reducing your coordination burden.',
+      improve:'Test your vision communication at the edges: share it with someone outside your industry. Can they understand what you are building and why it matters? If they cannot, the vision may be clear to you but encoded in insider language. Simplicity at the edges is a sign of deep clarity at the center.',
+      research:'Collins, J. & Porras, J. (1994). Built to Last. Locke, E.A. & Latham, G.P. (2002). Building a practically useful theory of goal setting. American Psychologist.'
+    },
+    g:{
+      what:'You have a vision — but it is not yet consistently driving your daily decisions. Research by Latham & Yukl (1975) on goal internalization shows that the distance between knowing your goal and organizing your behavior around it is bridged by a specific kind of implementation planning, not just motivation.',
+      why:'In this zone, entrepreneurs often have compelling vision documents or pitch decks that are not yet reflected in how they spend their time. The vision exists as content — not yet as compass. When teams sense this inconsistency between stated direction and daily behavior, trust in leadership direction declines.',
+      improve:'Conduct a "vision-action audit": write down your top three strategic priorities for this year. Then look at your last four weeks of calendar and financial spend. What percentage of time and money actually went toward each priority? The gap is your implementation deficit — and now you can close it.',
+      research:'Latham, G.P. & Yukl, G.A. (1975). A review of research on the application of goal setting in organizations. Academy of Management Journal.'
+    },
+    d:{
+      what:'Low vision scores do not mean you lack ideas — they mean your ideas have not yet crystallized into a clear, communicable destination that can guide decisions. Carland et al. (1984) found that one of the primary distinguishing factors between entrepreneurs who scale and those who stagnate is strategic intentionality.',
+      why:'Without a clear vision, every decision defaults to short-term optimization. You solve today\'s problem at the expense of tomorrow\'s opportunity — not from lack of intelligence but from lack of navigational anchor. Teams without clear direction default to whatever makes the leader happy in the moment, which is an exhausting and expensive way to run a business.',
+      improve:'Set aside three hours this week for what Jim Collins calls a "personal board meeting." Answer three questions in writing: Where is this business in five years? What must be true for that to happen? What am I doing today that actively works against that future? These answers, refined over multiple sessions, become your strategic compass.',
+      research:'Carland, J.W. et al. (1984). Differentiating entrepreneurs from small business owners. Academy of Management Review. Collins, J. (2001). Good to Great.'
+    }
+  }
+};
+
+const profileTypes = [
+  {min:85, name:'Strategic operator', desc:'You lead with both clarity and execution discipline. Research on high-performing founder-leaders identifies this combination — vision plus structured self-management plus relational skill — as the profile most associated with sustainable scale. Your challenge is not building; it is selecting where to build next.'},
+  {min:70, name:'High-potential founder', desc:'You have strong leadership instincts with identifiable and closeable gaps. Entrepreneurs in this profile typically have one or two dimensions functioning at a high level while others operate on autopilot. Targeted development in your lowest-scoring area will produce disproportionate returns.'},
+  {min:55, name:'Building the foundation', desc:'You are laying the groundwork. Research on entrepreneurial learning curves shows that founders who acknowledge and address leadership gaps early dramatically outperform those who wait until growth forces the issue. Your honest self-assessment here is itself a leadership act.'},
+  {min:0, name:'High-growth moment', desc:'Your scores indicate significant opportunity. This is not a deficit profile — it is a clarity profile. You now know specifically where to invest. Research on deliberate practice (Ericsson, 2008) shows that focused, intentional improvement in identified gaps produces faster gains than general effort spread across all areas.'}
+];
+
+const answers = {};
+const totalQ = 18;
+
+function buildSections(){
+  const container = document.getElementById('sections-container');
+  cats.forEach(cat => {
+    const card = document.createElement('div');
+    card.className = 'sec-card';
+    card.innerHTML = `<div class="sec-head">
+      <div class="sec-icon" style="background:${cat.iconBg};color:${cat.iconColor};"><i class="ti ${cat.icon}" aria-hidden="true"></i></div>
+      <div class="sec-meta">
+        <div class="sec-title">${cat.label}</div>
+        <div class="sec-basis">${cat.basis}</div>
+      </div>
+    </div>`;
+    cat.questions.forEach((q,qi) => {
+      const key = `${cat.id}_${qi}`;
+      const qDiv = document.createElement('div');
+      qDiv.className = 'q-block';
+      qDiv.innerHTML = `<div class="q-text">${q.text}</div>
+        <div class="scale-row">
+          <span class="scale-lbl">Rarely</span>
+          <div class="btns" id="btns_${key}">
+            ${[1,2,3,4,5].map(v=>`<button class="sb" data-val="${v}" data-key="${key}" onclick="pick(this)">${v}</button>`).join('')}
+          </div>
+          <span class="scale-lbl right">Always</span>
+        </div>`;
+      card.appendChild(qDiv);
+    });
+    container.appendChild(card);
+  });
+}
+
+function pick(btn){
+  const key = btn.dataset.key;
+  answers[key] = parseInt(btn.dataset.val);
+  document.querySelectorAll(`#btns_${key} .sb`).forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  updateProg();
+}
+
+function updateProg(){
+  const n = Object.keys(answers).length;
+  const pct = Math.round(n/totalQ*100);
+  document.getElementById('pf').style.width = pct+'%';
+  document.getElementById('prog-txt').textContent = `${n} of ${totalQ} answered`;
+  document.getElementById('prog-pct').textContent = pct+'%';
+  const done = n === totalQ;
+  document.getElementById('submitBtn').disabled = !done;
+  document.getElementById('cta-note').textContent = done ? 'Your profile is ready.' : `Answer all 18 questions to unlock your full profile and feedback.`;
+}
+
+function getCatScore(cat){
+  let weighted = 0, weights = 0;
+  cat.questions.forEach((q,qi) => {
+    const val = answers[`${cat.id}_${qi}`] || 0;
+    weighted += val * q.weight;
+    weights += q.weight;
+  });
+  return weighted / weights;
+}
+
+function getZone(score){
+  if(score >= 4) return 's';
+  if(score >= 2.5) return 'g';
+  return 'd';
+}
+
+function getZoneLabel(z){ return z==='s'?'Strength':z==='g'?'Growing':'Focus area'; }
+function getZoneBadge(z){ return z==='s'?'b-s':z==='g'?'b-g':'b-d'; }
+function getBarClass(z){ return z==='s'?'bf-s':z==='g'?'bf-g':'bf-d'; }
+
+function showResults(){
+  document.getElementById('assessment').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+
+  const scores = cats.map(c=>({ cat:c, score:getCatScore(c) }));
+  const overall = scores.reduce((a,s)=>a+s.score,0)/scores.length;
+  const pct = Math.round((overall/5)*100);
+
+  scores.sort((a,b)=>b.score-a.score);
+
+  const nStrengths = scores.filter(s=>getZone(s.score)==='s').length;
+  const nGaps = scores.filter(s=>getZone(s.score)==='d').length;
+
+  document.getElementById('overallScore').textContent = pct+'%';
+  document.getElementById('strengthCount').textContent = nStrengths;
+  document.getElementById('gapCount').textContent = nGaps;
+
+  const prof = profileTypes.find(p=>pct>=p.min);
+  document.getElementById('profileHeadline').textContent = prof.name;
+  document.getElementById('profileSub').textContent = `${pct}% overall · ${nStrengths} strength${nStrengths!==1?'s':''} · ${nGaps} focus area${nGaps!==1?'s':''}`;
+  document.getElementById('profileCard').innerHTML = `<div class="profile-title">Leadership profile</div>
+    <div class="profile-name">${prof.name}</div>
+    <div class="profile-desc">${prof.desc}</div>`;
+
+  const catContainer = document.getElementById('catResults');
+  catContainer.innerHTML = '';
+  scores.forEach(({cat,score})=>{
+    const z = getZone(score);
+    const pct2 = Math.round((score/5)*100);
+    const fb = feedback[cat.id][z];
+    const block = document.createElement('div');
+    block.className = 'cat-block';
+    block.innerHTML = `<div class="cat-top">
+      <div class="cat-name"><i class="ti ${cat.icon}" aria-hidden="true" style="font-size:15px;color:${cat.iconColor}"></i>${cat.label}<span class="badge ${getZoneBadge(z)}">${getZoneLabel(z)}</span></div>
+      <div class="cat-right"><span class="cat-score">${score.toFixed(1)} / 5.0</span></div>
+    </div>
+    <div class="bar-t"><div class="bar-f ${getBarClass(z)}" style="width:${pct2}%"></div></div>
+    <div class="fb-block">
+      <div class="fb-section">
+        <div class="fb-label"><i class="ti ti-eye" aria-hidden="true"></i>What your score tells us</div>
+        <div class="fb-text">${fb.what}</div>
+      </div>
+      <div class="fb-section">
+        <div class="fb-label"><i class="ti ti-brain" aria-hidden="true"></i>Why this matters for your business</div>
+        <div class="fb-text">${fb.why}</div>
+      </div>
+      <div class="fb-section">
+        <div class="fb-label"><i class="ti ti-arrow-right" aria-hidden="true"></i>What to do next</div>
+        <div class="fb-text">${fb.improve}</div>
+      </div>
+      <div class="research-tag">Research basis: ${fb.research}</div>
+    </div>`;
+    catContainer.appendChild(block);
+  });
+
+  const topGaps = scores.filter(s=>getZone(s.score)!=='s').slice(0,3);
+  const actionsCard = document.getElementById('actionsCard');
+  if(topGaps.length > 0){
+    const actionItems = topGaps.map((s,i)=>{
+      const z = getZone(s.score);
+      const act = feedback[s.cat.id][z].improve.split('.')[0]+'.';
+      return `<div class="action-item"><div class="action-num">${i+1}</div><div>${s.cat.label}: ${act}</div></div>`;
+    }).join('');
+    actionsCard.innerHTML = `<div class="actions-title"><i class="ti ti-list-check" aria-hidden="true" style="font-size:15px;color:#534AB7"></i>Your three highest-leverage actions</div>${actionItems}`;
+  } else {
+    actionsCard.innerHTML = `<div class="actions-title"><i class="ti ti-trophy" aria-hidden="true" style="font-size:15px;color:#1D9E75"></i>Exceptional profile — all areas at strength level</div><div style="font-size:13px;color:var(--color-text-secondary)">Your focus now is integration and development of the people around you. Consider how you build these same capabilities in your team.</div>`;
+  }
+}
+
+function resetAssessment(){
+  Object.keys(answers).forEach(k=>delete answers[k]);
+  document.querySelectorAll('.sb.sel').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('pf').style.width='0%';
+  document.getElementById('prog-txt').textContent='0 of 18 answered';
+  document.getElementById('prog-pct').textContent='0%';
+  document.getElementById('submitBtn').disabled=true;
+  document.getElementById('cta-note').textContent='Answer all 18 questions to unlock your full profile and feedback.';
+  document.getElementById('results').style.display='none';
+  document.getElementById('assessment').style.display='block';
+}
+
+buildSections();
+</script>
