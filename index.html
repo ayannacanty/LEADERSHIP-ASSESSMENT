@@ -95,7 +95,44 @@
 .retake-btn{background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:11px 28px;font-size:13px;font-weight:500;color:var(--color-text-primary);cursor:pointer;transition:background .12s ease}
 .retake-btn:hover{background:var(--color-background-secondary)}
 .deep-btn{margin-top:1rem;display:inline-block}
+.print-actions{
+  display:flex;
+  justify-content:center;
+  gap:.75rem;
+  margin-top:1rem;
+}
 
+.print-btn{
+  background:transparent;
+  border:0.5px solid var(--color-border-secondary);
+  border-radius:var(--border-radius-md);
+  padding:10px 22px;
+  font-size:13px;
+  cursor:pointer;
+}
+
+@media print{
+  body *{
+    visibility:hidden;
+  }
+
+  #results,
+  #results *{
+    visibility:visible;
+  }
+
+  #results{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+  }
+
+  .print-actions,
+  .retake-row{
+    display:none !important;
+  }
+}
 </style>
 </head>
 
@@ -137,6 +174,11 @@
   <div class="profile-card" id="profileCard"></div>
   <div id="catResults"></div>
   <div class="actions-card" id="actionsCard"></div>
+  <div class="print-actions">
+  <button class="print-btn" onclick="printResults()">
+    Print Results
+  </button>
+</div>
   <div class="retake-row">
     <button class="retake-btn" onclick="resetAssessment()">Retake assessment</button>
     <div style="margin-top:.6rem;font-size:12px;color:var(--color-text-secondary)">Retake in 30–60 days to measure growth. Screenshot to track your baseline.</div>
@@ -485,6 +527,9 @@ function resetAssessment(){
   document.getElementById('cta-note').textContent='Answer all 18 questions to unlock your full profile and feedback.';
   document.getElementById('results').style.display='none';
   document.getElementById('assessment').style.display='block';
+}
+function printResults(){
+  window.print();
 }
 
 buildSections();
