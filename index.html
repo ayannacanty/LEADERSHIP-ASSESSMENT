@@ -133,6 +133,11 @@
     display:none !important;
   }
 }
+    #results{
+  max-width:680px;
+  margin:0 auto;
+  padding:2rem 1.25rem;
+}
 </style>
 </head>
 
@@ -530,6 +535,22 @@ function resetAssessment(){
 }
 function printResults(){
   window.print();
+}
+
+function downloadResultsPDF(){
+  const element = document.getElementById('results');
+  const profileName = document.getElementById('profileHeadline').textContent || 'Leadership Profile';
+  const score = document.getElementById('overallScore').textContent || 'Score';
+
+  const opt = {
+    margin: 0.5,
+    filename: `Leadership-Assessment-${profileName}-${score}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(element).save();
 }
 
 buildSections();
