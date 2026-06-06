@@ -123,6 +123,15 @@
 .save-note{font-size:11px;color:var(--color-text-secondary);text-align:center;margin-top:.55rem;min-height:16px}
 @media(max-width:620px){.stat-grid,.summary-grid{grid-template-columns:1fr}.print-actions{flex-direction:column}.print-btn{width:100%}}
 
+
+.lead-card{display:none;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-top:1rem}
+.lead-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:.35rem}
+.lead-note{font-size:12px;color:var(--color-text-secondary);line-height:1.55;margin-bottom:1rem}
+.lead-field{margin-bottom:.8rem}
+.lead-field label{display:block;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-secondary);margin-bottom:.35rem}
+.lead-field input{width:100%;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 13px;font-size:14px;color:var(--color-text-primary);background:var(--color-background-primary)}
+.lead-field input:focus{outline:none;border-color:var(--color-border-secondary)}
+.lead-error{display:none;font-size:12px;color:#D85A30;margin-bottom:.8rem;line-height:1.45}
 @media print{
   body *{
     visibility:hidden;
@@ -172,9 +181,24 @@
   </div>
   <div id="sections-container"></div>
   <div class="cta-row">
-    <button class="submit-btn" id="submitBtn" disabled onclick="showResults()">See my leadership profile</button>
+    <button class="submit-btn" id="submitBtn" disabled onclick="showLeadForm()">See my leadership profile</button>
     <div class="cta-note" id="cta-note">Answer all 18 questions to unlock your full profile and feedback.</div>
   </div>
+  <div class="lead-card" id="leadFormCard">
+    <div class="lead-title">Enter Your Information To View Your Results</div>
+    <div class="lead-note">Please enter your full name and email address to unlock your personalized leadership profile.</div>
+    <div class="lead-field">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" autocomplete="name" required>
+    </div>
+    <div class="lead-field">
+      <label for="emailAddress">Email Address</label>
+      <input type="email" id="emailAddress" autocomplete="email" required>
+    </div>
+    <div class="lead-error" id="leadError">Please enter your full name and a valid email address before viewing your results.</div>
+    <button class="submit-btn" type="button" onclick="submitLeadForm()">View My Results</button>
+  </div>
+
 </div>
 
 <div class="rw" id="results">
@@ -426,51 +450,56 @@ function chooseProfile(scores,pct){
 
   if(highCount >= 5 && low.score >= 3.7){
     return {
-      name:'Integrated strategic leader',
+      name:'Integrated Strategic Leader',
       desc:'Your results show strong leadership integration across execution, relationships, resilience, and direction. The research theme here is sustainable scale: your next opportunity is to keep strengthening the systems, people, and decision rhythms around you so your leadership does not depend only on personal effort.'
     };
   }
 
   if(pct >= 78 && spread >= 1.1){
     return {
-      name:`Strong ${top.cat.label.toLowerCase()} leader with a ${low.cat.label.toLowerCase()} growth edge`,
+      name:`${top.cat.label} Anchored Leader With A ${low.cat.label} Growth Edge`,
       desc:`Your strongest signal is ${top.cat.label.toLowerCase()}, while ${low.cat.label.toLowerCase()} is the area most likely to limit your next stage of growth. This is a common high-potential founder pattern: one capability is already creating momentum, while one underdeveloped capability is quietly absorbing time, trust, or opportunity.`
     };
   }
 
   if(lowCount >= 3){
     return {
-      name:'Capacity rebuilding leader',
+      name:'Capacity Rebuilding Leader',
       desc:`Your answers point to a leadership system under strain. The strongest research-backed move is not to fix everything at once. Start with ${low.cat.label.toLowerCase()}, because that is the lowest leverage point in your current pattern, then use your highest area, ${top.cat.label.toLowerCase()}, as the asset that helps you rebuild.`
     };
   }
 
   const pairKey = [top.cat.id, second.cat.id].sort().join('_');
   const pairProfiles = {
-    comm_community:['Relationship-centered catalyst','Your leadership strength is relational. You build momentum through clarity, connection, trust, and people. The growth work is making sure relationships are paired with systems so the business is not dependent on constant personal presence.'],
-    deleg_self:['Operational multiplier','Your profile shows strong execution discipline and capacity-building instincts. You are positioned to scale when your routines, standards, and delegation systems become visible enough for others to follow.'],
-    resil_self:['Steady execution builder','Your leadership pattern is grounded in consistency and recovery. You can stay engaged through pressure, which is valuable, but your next level depends on translating that steadiness into clearer direction, communication, or support systems.'],
-    self_vision:['Strategic driver','You pair direction with personal discipline. This is a strong founder profile because vision is supported by behavior. The risk is carrying too much alone if communication, community, or delegation lag behind.'],
-    deleg_vision:['Scale-oriented architect','You think beyond the current task and show signs of building through structure. Your next step is making the vision and handoffs clear enough that other people can own meaningful work without constant correction.'],
-    community_vision:['Opportunity connector','You connect people and ideas to a larger direction. This profile is strong for partnerships, visibility, and market-building. The growth edge is turning opportunity into repeatable execution.'],
-    comm_deleg:['Team-capacity builder','You show the ingredients needed to lead through others: clarity and trust. The next level is making expectations, authority, and success measures concrete enough that people can move without waiting on you.'],
-    comm_self:['Clear execution leader','You combine personal follow-through with communication clarity. This helps reduce confusion and build credibility. Your growth edge is making sure your business is not limited by your own availability.'],
-    community_resil:['Resilient network builder','You recover through connection and can use community as a practical business asset. Your next level is converting that relational strength into clearer decisions, systems, and follow-through.'],
-    deleg_resil:['Adaptive capacity builder','You are learning to stay steady while allowing others to carry meaningful work. This is a useful growth profile because pressure does not have to force everything back onto you.'],
-    resil_vision:['Purpose-driven stabilizer','You hold direction and recover from setbacks, which helps you keep moving through uncertainty. Your growth edge is translating that direction into clearer communication, stronger systems, and shared ownership.'],
-    community_deleg:['Collaborative multiplier','You are strongest when building with and through people. This profile can create high leverage for small businesses with limited resources, especially when community support and delegation are structured clearly.'],
-    comm_resil:['Calm clarity leader','You bring steadiness and communication to pressure moments. This helps people trust your leadership. Your growth edge is using that trust to build stronger systems, relationships, or long-range direction.'],
-    self_community:['Disciplined connector','You pair personal follow-through with relationship-building. This can produce strong referral, partnership, and execution momentum when you protect time for strategic community work.'],
-    self_deleg:['Operational multiplier','Your strongest pattern is disciplined execution through systems and shared work. The next level is making sure vision, community, and communication keep pace with your operational strength.'],
-    vision_comm:['Aligned communicator','You can connect direction with clarity. This is powerful because people are more likely to move when they understand both where you are going and what is expected of them.']
+    comm_community:['Relationship-Centered Leader','Your leadership strength is relational. You build momentum through clarity, connection, trust, and people. The growth work is making sure relationships are paired with systems so the business is not dependent on constant personal presence.'],
+    deleg_self:['Delegation Capacity Builder','Your profile shows strong execution discipline and capacity-building instincts. You are positioned to scale when your routines, standards, and delegation systems become visible enough for others to follow.'],
+    resil_self:['Self-Regulated Resilience Leader','Your leadership pattern is grounded in consistency and recovery. You can stay engaged through pressure, which is valuable, but your next level depends on translating that steadiness into clearer direction, communication, or support systems.'],
+    self_vision:['Vision-Aligned Self-Leader','You pair direction with personal discipline. This is a strong founder profile because vision is supported by behavior. The risk is carrying too much alone if communication, community, or delegation lag behind.'],
+    deleg_vision:['Vision-Led Delegation Builder','You think beyond the current task and show signs of building through structure. Your next step is making the vision and handoffs clear enough that other people can own meaningful work without constant correction.'],
+    community_vision:['Social Capital Vision Leader','You connect people and ideas to a larger direction. This profile is strong for partnerships, visibility, and market-building. The growth edge is turning opportunity into repeatable execution.'],
+    comm_deleg:['Communication And Delegation Leader','You show the ingredients needed to lead through others: clarity and trust. The next level is making expectations, authority, and success measures concrete enough that people can move without waiting on you.'],
+    comm_self:['Communication Clarity Self-Leader','You combine personal follow-through with communication clarity. This helps reduce confusion and build credibility. Your growth edge is making sure your business is not limited by your own availability.'],
+    community_resil:['Resilient Social Capital Builder','You recover through connection and can use community as a practical business asset. Your next level is converting that relational strength into clearer decisions, systems, and follow-through.'],
+    deleg_resil:['Resilient Delegation Builder','You are learning to stay steady while allowing others to carry meaningful work. This is a useful growth profile because pressure does not have to force everything back onto you.'],
+    resil_vision:['Vision-Guided Resilience Leader','You hold direction and recover from setbacks, which helps you keep moving through uncertainty. Your growth edge is translating that direction into clearer communication, stronger systems, and shared ownership.'],
+    community_deleg:['Social Capital Delegation Leader','You are strongest when building with and through people. This profile can create high leverage for small businesses with limited resources, especially when community support and delegation are structured clearly.'],
+    comm_resil:['Resilient Communication Leader','You bring steadiness and communication to pressure moments. This helps people trust your leadership. Your growth edge is using that trust to build stronger systems, relationships, or long-range direction.'],
+    self_community:['Self-Regulated Social Capital Builder','You pair personal follow-through with relationship-building. This can produce strong referral, partnership, and execution momentum when you protect time for strategic community work.'],
+    self_deleg:['Delegation Capacity Builder','Your strongest pattern is disciplined execution through systems and shared work. The next level is making sure vision, community, and communication keep pace with your operational strength.'],
+    vision_comm:['Vision And Communication Clarity Leader','You can connect direction with clarity. This is powerful because people are more likely to move when they understand both where you are going and what is expected of them.']
   };
-  const match = pairProfiles[pairKey] || ['Emerging balanced builder',`Your strongest areas are ${top.cat.label.toLowerCase()} and ${second.cat.label.toLowerCase()}. Your results show usable leadership assets with specific growth edges. Focus first on ${low.cat.label.toLowerCase()}, because improving the lowest score will create the biggest lift across the whole business.`];
+  const match = pairProfiles[pairKey] || ['Balanced Developing Leader',`Your strongest areas are ${top.cat.label.toLowerCase()} and ${second.cat.label.toLowerCase()}. Your results show usable leadership assets with specific growth edges. Focus first on ${low.cat.label.toLowerCase()}, because improving the lowest score will create the biggest lift across the whole business.`];
 
   return {name:match[0], desc:match[1]};
 }
 
 const answers = {};
 const totalQ = 18;
+const SPREADSHEET_WEB_APP_URL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+function toTitleCase(text){
+  return String(text || '').replace(/\w\S*/g, word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+}
 
 function buildSections(){
   const container = document.getElementById('sections-container');
@@ -541,6 +570,223 @@ function getZoneLabel(z){ return z==='s'?'Strength':z==='g'?'Growing':'Focus are
 function getZoneBadge(z){ return z==='s'?'b-s':z==='g'?'b-g':'b-d'; }
 function getBarClass(z){ return z==='s'?'bf-s':z==='g'?'bf-g':'bf-d'; }
 
+
+function showLeadForm(){
+  const n = Object.keys(answers).length;
+  if(n !== totalQ) return;
+  document.getElementById('leadFormCard').style.display = 'block';
+  document.getElementById('leadFormCard').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+async function submitLeadForm(){
+  const fullName = document.getElementById('fullName').value.trim();
+  const emailAddress = document.getElementById('emailAddress').value.trim();
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
+  if(fullName.length < 2 || !emailOk){
+    document.getElementById('leadError').style.display = 'block';
+    return;
+  }
+  document.getElementById('leadError').style.display = 'none';
+  localStorage.setItem('leadershipAssessmentUser', JSON.stringify({ fullName, emailAddress, savedAt: new Date().toISOString() }));
+  showResults();
+  submitLeadToSpreadsheet(window.currentLeadershipResults);
+}
+
+function getLeadUser(){
+  try{
+    return JSON.parse(localStorage.getItem('leadershipAssessmentUser')) || {};
+  } catch(e){
+    return {};
+  }
+}
+
+function buildResultsData(scores,pct,prof,displayStrengths,focusAreas){
+  const user = getLeadUser();
+  const categoryScores = {};
+  scores.forEach(s => categoryScores[s.cat.label] = Number(s.score.toFixed(2)));
+  return {
+    submittedAt: new Date().toISOString(),
+    fullName: user.fullName || '',
+    emailAddress: user.emailAddress || '',
+    profileName: toTitleCase(prof.name),
+    overallScore: pct,
+    strongestArea: scores[0].cat.label,
+    primaryFocus: focusAreas[0].cat.label,
+    strengths: displayStrengths.map(s => s.cat.label).join(', '),
+    focusAreas: focusAreas.map(s => s.cat.label).join(', '),
+    categoryScores: categoryScores
+  };
+}
+
+function submitLeadToSpreadsheet(resultsData){
+  if(!resultsData || !SPREADSHEET_WEB_APP_URL || SPREADSHEET_WEB_APP_URL.includes('PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE')) return;
+  fetch(SPREADSHEET_WEB_APP_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(resultsData)
+  }).catch(function(error){
+    console.warn('Spreadsheet save failed:', error);
+  });
+}
+
+
+const recommendationOptions = {
+  self:{
+    s:[
+      'Add a "decision receipt" at the end of each week. Write down the three decisions you made, the reason behind each one, and what evidence would prove you wrong. This uses metacognition and implementation review to keep disciplined leaders from becoming overconfident.',
+      'Run a "calendar truth test" once a month. Label every block of time as revenue, strategy, service, admin, recovery, or avoidable friction. Then remove or redesign one repeating block that is not connected to your highest-value role.'
+    ],
+    g:[
+      'Create a "friction budget." Pick one recurring task that drains attention and spend 30 minutes redesigning the environment around it. Examples include templates, auto-replies, batching, or a standing decision rule. Behavioral design research shows context changes usually outperform willpower.',
+      'Use a "one-tab rule" for strategic work. For 45 minutes, keep only the document, spreadsheet, or tool required for the priority task open. This reduces cognitive switching cost and makes the work visible enough to complete.'
+    ],
+    d:[
+      'Build a "minimum viable operating rhythm." Choose one daily start ritual, one weekly review, and one shutdown ritual. Keep each under ten minutes. The goal is not perfection. It is giving your brain repeated cues for strategic attention.',
+      'Use a "public commitment anchor." Tell one trusted person the single business-building task you will complete this week and send proof when it is done. Accountability research shows specificity and visibility increase follow-through.'
+    ]
+  },
+  comm:{
+    s:[
+      'Create a "clarity library" of your best explanations, expectations, and feedback language. Strong communicators often repeat themselves informally. Capturing the language turns personal clarity into an asset others can reuse.',
+      'Try a "teach-back close" in important conversations. Ask the other person to repeat the decision, owner, deadline, and next step in their own words. This is used in high-reliability settings to reduce hidden misunderstanding.'
+    ],
+    g:[
+      'Start sending a Friday "decision log" to anyone affected by your work. Include what changed, what stayed the same, what is waiting, and what you need. This reduces ambiguity without requiring more meetings.',
+      'Use the "one sentence standard." For every task or request, write one sentence that defines what done means. Role clarity research shows that explicit standards reduce rework and emotional friction.'
+    ],
+    d:[
+      'Create a "no guessing rule." For two weeks, any request you make must include owner, outcome, deadline, and decision authority. This turns communication from personality into operating infrastructure.',
+      'Use a three-line repair script when confusion happens: here is what I intended, here is where I was unclear, here is the new agreement. Repair behavior strengthens trust faster than pretending the miscommunication did not happen.'
+    ]
+  },
+  community:{
+    s:[
+      'Create a "network gap map." List the five kinds of relationships your next stage requires, such as referral sources, technical helpers, funders, operators, or community validators. Strong connectors scale faster when their network is intentionally shaped, not just large.',
+      'Run a monthly "opportunity dinner" or virtual circle with three people who should know each other. No pitching. Each person shares one need and one resource. This converts social capital into practical exchange without feeling transactional.'
+    ],
+    g:[
+      'Start a "zero-ask outreach sprint." Once a week, reach out to one person with a useful article, introduction, lead, or encouragement and ask for nothing. Weak-tie research shows that opportunity often comes from these light but consistent bridges.',
+      'Build a "community bench" spreadsheet with people you trust by category. Include what they are good at, what they need, and who they should meet. This makes relationship-building concrete instead of random.'
+    ],
+    d:[
+      'Create a "three-person founder kitchen cabinet." Choose one peer, one operator, and one connector. Meet monthly with a single rule: bring the real problem, not the polished update. Peer learning research shows this reduces isolation and improves decision quality.',
+      'Use a "borrowed room strategy." Instead of building a new audience from scratch, identify three existing rooms where your customers, partners, or collaborators already gather. Contribute value there consistently for 60 days before making any ask.'
+    ]
+  },
+  deleg:{
+    s:[
+      'Move from delegation to "decision rights." For each person helping you, define what they can decide without you, what they must consult you on, and what only you decide. This prevents hidden bottlenecks while protecting quality.',
+      'Create a "failure boundary" for delegated work. Name what can go wrong safely and what cannot. Strong delegation improves when people know where they have room to learn without risking the business.'
+    ],
+    g:[
+      'Run a "founder bottleneck audit." For one week, write down every moment someone waits on you. Sort the list into decisions, approvals, information, and trust. Then remove one bottleneck with a template, rule, or handoff.',
+      'Use the "80 percent handoff." Pick one recurring task someone else can do at 80 percent of your standard. Give them the standard, one example, and a check-in point. Do not take the task back unless the risk is real.'
+    ],
+    d:[
+      'Start with "delegation by shadowing." Have someone watch you complete one task while you narrate the decisions behind it. Then they do it while you watch. This transfers judgment, not just instructions.',
+      'Create a "stop doing list" before a to-do list. Identify one activity you should no longer personally own. Under-delegation often persists because founders add help without removing responsibility from themselves.'
+    ]
+  },
+  resil:{
+    s:[
+      'Build a "resilience data file." After each setback, record trigger, response, recovery time, lesson, and next action. Over time, this shows which recovery practices actually work for you, not just what sounds healthy.',
+      'Use a "stress rehearsal" before major launches or decisions. Write down what could go wrong, what signal would show it is happening, and the first response. This keeps resilience from depending on adrenaline.'
+    ],
+    g:[
+      'Create a "first 24 hours reset card" and keep it visible. Include one body action, one connection action, and one decision action. This interrupts rumination and gives your nervous system a known path back to action.',
+      'Try a "failure debrief before the fix." Spend 15 minutes separating facts, interpretation, emotion, and next move. This reduces cognitive narrowing and helps you avoid solving the wrong problem.'
+    ],
+    d:[
+      'Build a "re-entry protocol" for hard moments. When you avoid a task, client, or decision, the next step must be tiny and visible, such as sending one email, opening the document, or asking one person for help. Avoidance shrinks through action, not analysis.',
+      'Create a "support trigger." Decide in advance what event requires you to contact a peer, advisor, or therapist, such as two missed deadlines, three nights of poor sleep, or avoiding a key conversation. This removes the burden of deciding while stressed.'
+    ]
+  },
+  vision:{
+    s:[
+      'Turn your vision into a "decision filter." Write three sentences: what you are building, who it is for, and what you will not do even if it looks attractive. Use it to accept or reject opportunities each week.',
+      'Run a "stranger clarity test." Explain the business direction to someone outside your field and ask them what they think the next three priorities are. If they cannot name them, simplify the vision language.'
+    ],
+    g:[
+      'Create a "vision-to-calendar bridge." Pick one strategic priority and assign it a recurring weekly block, a metric, and a visible owner. Goal-setting research is strongest when goals become behavior and feedback loops.',
+      'Use a "future press release" exercise. Write the headline, customer outcome, proof point, and business result you want 12 months from now. Then identify the first operational step that would make it believable.'
+    ],
+    d:[
+      'Hold a "personal board meeting" with yourself using three pages only: where the business is going, what must be true, and what you are doing that works against it. Repeat monthly until the direction becomes specific enough to guide tradeoffs.',
+      'Build a "no list" before the strategy list. Write five opportunities, services, audiences, or habits you will stop pursuing. Vision becomes clearer when the business has boundaries.'
+    ]
+  }
+};
+
+function getPatternRecommendations(scores){
+  const byId = {};
+  scores.forEach(s => byId[s.cat.id] = s.score);
+  const recs = [];
+
+  if(byId.community >= 4 && byId.deleg < 3){
+    recs.push('Pattern insight: Your community strength may be creating opportunity flow that still routes through you. Try a 30-day referral transfer experiment. Every introduction, partnership request, or opportunity first gets routed to a trusted collaborator or simple intake form before it reaches your calendar.');
+  }
+  if(byId.vision >= 4 && byId.self < 3){
+    recs.push('Pattern insight: Your direction is stronger than your operating rhythm. Build a weekly vision calendar. Each Friday, label the prior week as vision, revenue, service, admin, or avoidable friction. Then move one hour from friction to vision before Monday starts.');
+  }
+  if(byId.resil >= 4 && byId.comm < 3){
+    recs.push('Pattern insight: You may recover internally faster than people around you can read what is happening. Send a monthly leadership memo with decisions, lessons, risks, and what you need. This turns private resilience into shared trust.');
+  }
+  if(byId.self >= 4 && byId.community < 3){
+    recs.push('Pattern insight: Your discipline is strong, but the business may be underusing social capital. Schedule one zero-ask conversation each week with someone outside your usual circle. No pitch, no favor, no immediate transaction. Only curiosity and connection.');
+  }
+  if(byId.deleg >= 4 && byId.vision < 3){
+    recs.push('Pattern insight: You may be ready to hand off work before the destination is clear enough. Create a one-page strategic narrative for the next 24 months and attach every delegated task to one sentence from that narrative.');
+  }
+  if(byId.comm >= 4 && byId.deleg < 3){
+    recs.push('Pattern insight: You may be clear with people but still holding too much yourself. Turn your next clear explanation into a reusable handoff. Record a five-minute screen walkthrough, give the standard, then let someone else own the next repeat.');
+  }
+  if(byId.resil < 3 && byId.self < 3){
+    recs.push('Pattern insight: This is a capacity protection issue before it is a productivity issue. Pick one daily recovery input and one daily strategic input for 14 days. Keep both small enough that you can complete them on your worst reasonable day.');
+  }
+  if(byId.community >= 4 && byId.vision >= 4 && byId.deleg < 3.5){
+    recs.push('Pattern insight: You can attract people to a direction, but the next level is shared ownership. Create a contributor map with three columns: who believes in the vision, what they can own, and what decision they can make without you.');
+  }
+
+  return recs;
+}
+
+function buildNextSteps(catId,z,scores,baseRecommendation){
+  const options = recommendationOptions[catId] && recommendationOptions[catId][z] ? recommendationOptions[catId][z] : [];
+  const patternOptions = getPatternRecommendations(scores).filter(text => {
+    if(catId === 'community') return text.includes('community') || text.includes('social capital') || text.includes('referral') || text.includes('zero-ask') || text.includes('contributors');
+    if(catId === 'deleg') return text.includes('delegated') || text.includes('handoff') || text.includes('holding') || text.includes('shared ownership') || text.includes('decision');
+    if(catId === 'vision') return text.includes('vision') || text.includes('direction') || text.includes('strategic narrative') || text.includes('24 months');
+    if(catId === 'self') return text.includes('operating rhythm') || text.includes('calendar') || text.includes('discipline') || text.includes('productivity') || text.includes('strategic input');
+    if(catId === 'comm') return text.includes('memo') || text.includes('clear') || text.includes('communication') || text.includes('trust');
+    if(catId === 'resil') return text.includes('resilience') || text.includes('recover') || text.includes('capacity') || text.includes('recovery');
+    return false;
+  }).slice(0,1);
+
+  const all = [baseRecommendation].concat(options).concat(patternOptions);
+  return all.map((text,index)=>{
+    const label = index === 0 ? 'Primary recommendation' : index === 1 ? 'Additional evidence-based option' : index === 2 ? 'Out-of-the-box experiment' : 'Pattern-based recommendation';
+    return `<div style="margin-bottom:.55rem"><strong>${label}:</strong> ${text}</div>`;
+  }).join('');
+}
+
+function buildPriorityActions(focusAreas,scores){
+  const patternRecs = getPatternRecommendations(scores).slice(0,2);
+  const focusItems = focusAreas.map((s,i)=>{
+    const z = getZone(s.score);
+    const base = feedback[s.cat.id][z].improve;
+    const extra = recommendationOptions[s.cat.id] && recommendationOptions[s.cat.id][z] ? recommendationOptions[s.cat.id][z][0] : '';
+    return `<div class="action-item"><div class="action-num">${i+1}</div><div><strong>${s.cat.label}:</strong> ${base}${extra ? ' '+extra : ''}</div></div>`;
+  });
+
+  const patternItems = patternRecs.map((text,i)=>{
+    return `<div class="action-item"><div class="action-num">${focusItems.length+i+1}</div><div><strong>Pattern-Based Action:</strong> ${text}</div></div>`;
+  });
+
+  return focusItems.concat(patternItems).join('');
+}
+
+
 function showResults(){
   document.getElementById('assessment').style.display = 'none';
   document.getElementById('results').style.display = 'block';
@@ -560,10 +806,11 @@ function showResults(){
   document.getElementById('gapCount').textContent = focusAreas.length;
 
   const prof = chooseProfile(scores,pct);
-  document.getElementById('profileHeadline').textContent = prof.name;
+  prof.name = toTitleCase(prof.name);
+  document.getElementById('profileHeadline').textContent = toTitleCase(prof.name);
   document.getElementById('profileSub').textContent = `${pct}% overall · strongest area: ${scores[0].cat.label} · primary focus: ${focusAreas[0].cat.label}`;
   document.getElementById('profileCard').innerHTML = `<div class="profile-title">Leadership Profile</div>
-    <div class="profile-name">${prof.name}</div>
+    <div class="profile-name">${toTitleCase(prof.name)}</div>
     <div class="profile-desc">${prof.desc}</div>`;
 
   document.getElementById('resultSummary').innerHTML = `<div class="summary-grid">
@@ -609,18 +856,14 @@ function showResults(){
       </div>
       <div class="fb-section">
         <div class="fb-label"><i class="ti ti-arrow-right" aria-hidden="true"></i>What to do next</div>
-        <div class="fb-text">${fb.improve}</div>
+        <div class="fb-text">${buildNextSteps(cat.id,z,scores,fb.improve)}</div>
       </div>
       <div class="research-tag">Research basis: ${fb.research}</div>
     </div>`;
     catContainer.appendChild(block);
   });
 
-  const actionItems = focusAreas.map((s,i)=>{
-    const z = getZone(s.score);
-    const act = feedback[s.cat.id][z].improve;
-    return `<div class="action-item"><div class="action-num">${i+1}</div><div><strong>${s.cat.label}:</strong> ${act}</div></div>`;
-  }).join('');
+  const actionItems = buildPriorityActions(focusAreas,scores);
   document.getElementById('actionsCard').innerHTML = `<div class="actions-title"><i class="ti ti-list-check" aria-hidden="true" style="font-size:15px;color:#534AB7"></i>Your highest-leverage actions</div>${actionItems}`;
 
   window.currentLeadershipResults = buildResultsData(scores,pct,prof,displayStrengths,focusAreas);
@@ -633,11 +876,50 @@ function resetAssessment(){
   document.getElementById('prog-pct').textContent='0%';
   document.getElementById('submitBtn').disabled=true;
   document.getElementById('cta-note').textContent='Answer all 18 questions to unlock your full profile and feedback.';
+  document.getElementById('leadFormCard').style.display='none';
+  document.getElementById('fullName').value='';
+  document.getElementById('emailAddress').value='';
+  document.getElementById('leadError').style.display='none';
   document.getElementById('results').style.display='none';
   document.getElementById('assessment').style.display='block';
 }
 function printResults(){
   window.print();
+}
+
+function saveResults(){
+  if(window.currentLeadershipResults){
+    localStorage.setItem('leadershipAssessmentResults', JSON.stringify(window.currentLeadershipResults));
+  }
+}
+
+function downloadResultsText(){
+  const data = window.currentLeadershipResults;
+  if(!data) return;
+  const lines = [
+    'Entrepreneur Leadership Assessment Results',
+    '',
+    `Full Name: ${data.fullName}`,
+    `Email Address: ${data.emailAddress}`,
+    `Leadership Profile: ${data.profileName}`,
+    `Overall Score: ${data.overallScore}%`,
+    `Strongest Area: ${data.strongestArea}`,
+    `Primary Focus: ${data.primaryFocus}`,
+    `Strengths: ${data.strengths}`,
+    `Focus Areas: ${data.focusAreas}`,
+    '',
+    'Category Scores:',
+    ...Object.entries(data.categoryScores).map(([key,value]) => `${key}: ${value} / 5.0`)
+  ];
+  const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Leadership-Assessment-${data.profileName.replace(/[^a-z0-9]+/gi,'-')}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 function downloadResultsPDF(){
@@ -664,4 +946,3 @@ buildSections();
 </script>
 
 </main>
-
