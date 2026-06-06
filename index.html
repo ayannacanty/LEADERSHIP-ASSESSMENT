@@ -571,6 +571,176 @@ function getZoneBadge(z){ return z==='s'?'b-s':z==='g'?'b-g':'b-d'; }
 function getBarClass(z){ return z==='s'?'bf-s':z==='g'?'bf-g':'bf-d'; }
 
 
+function getQuestionSignals(cat){
+  return cat.questions.map((q,qi)=>({
+    text:q.text,
+    value:answers[`${cat.id}_${qi}`] || 0,
+    index:qi
+  })).sort((a,b)=>a.value-b.value);
+}
+
+function getScoreById(scores,id){
+  const found = scores.find(s=>s.cat.id===id);
+  return found ? found.score : 0;
+}
+
+function getAdvancedRecommendations(cat,score,scores){
+  const z = getZone(score);
+  const qSignals = getQuestionSignals(cat);
+  const weakestQuestion = qSignals[0] || {index:0,value:0};
+  const strongestQuestion = qSignals[qSignals.length - 1] || {index:0,value:0};
+  const recommendations = [];
+
+  const optionBank = {
+    self:{
+      s:[
+        'Advanced option: create a personal operating manual that names your best decision conditions, your early warning signs under pressure, and the routines that protect deep work. Self-regulation research shows that making standards explicit reduces reliance on willpower alone.',
+        'Out-of-the-box experiment: run a two-week "CEO energy ledger." Track which tasks create strategic energy, which drain it, and which produce false urgency. Then remove, batch, or delegate the lowest-return energy drains before adding any new commitments.'
+      ],
+      g:[
+        'Additional option: use an implementation-intention trigger. Write one sentence for each priority: "If it is 9:00 AM on Monday, then I work on revenue strategy before opening email." Research on implementation intentions shows that specific cues improve follow-through more than motivation alone.',
+        'Out-of-the-box experiment: create a "decision parking lot" for non-urgent decisions. Give yourself two fixed decision windows each week so small choices stop stealing strategic attention throughout the day.'
+      ],
+      d:[
+        'Additional option: build a one-page founder control panel with only three weekly numbers: strategic hours protected, revenue-generating actions completed, and commitments kept. Behavioral self-monitoring research shows that visible feedback loops improve consistency.',
+        'Out-of-the-box experiment: do a 10-day urgency fast. For the first 60 minutes of each workday, you may only do work that compounds future capacity: systems, sales, strategy, documentation, or relationship-building. No inbox, no admin, no reactive fixes.'
+      ]
+    },
+    comm:{
+      s:[
+        'Advanced option: create a decision log that captures what was decided, who owns it, the standard for success, and the next visible checkpoint. Psychological safety research is strongest when clarity and voice are both present.',
+        'Out-of-the-box experiment: replace one status meeting with an asynchronous "friction memo" where people name what is unclear, stuck, duplicated, or emotionally draining. This surfaces hidden confusion before it becomes conflict.'
+      ],
+      g:[
+        'Additional option: use a "closed-loop clarity" practice. After giving direction, ask the other person to send back what they believe success looks like in their own words. This reduces assumption-based work without micromanaging.',
+        'Out-of-the-box experiment: record a two-minute weekly founder briefing every Friday with three parts: what changed, what matters next, and what help is needed. Consistent communication cadence reduces cognitive load for everyone around you.'
+      ],
+      d:[
+        'Additional option: create a one-sentence expectation formula for every request: owner, outcome, deadline, decision rights, and what good looks like. Role clarity research shows that ambiguity is a direct driver of stress and disengagement.',
+        'Out-of-the-box experiment: run a "confusion audit." Ask three people who interact with your business where they have had to guess what you meant, what you wanted, or what came next. Fix only those points first.'
+      ]
+    },
+    community:{
+      s:[
+        'Advanced option: formalize your network map into five circles: referral sources, truth-tellers, opportunity scouts, technical helpers, and peer operators. Social capital research shows that different ties serve different functions, and strong founders intentionally maintain a portfolio of ties.',
+        'Out-of-the-box experiment: host a monthly "small table" of four people who should know each other but do not. No panel, no selling, no pitch. Just curated trust-building. Network brokerage research shows that value often comes from connecting disconnected clusters.'
+      ],
+      g:[
+        'Additional option: build a weak-tie calendar. Each week, reconnect with one person outside your usual circle and ask one question about what they are seeing in the market. Granovetter\'s weak tie research shows that new information often comes from people beyond close contacts.',
+        'Out-of-the-box experiment: create a "community debt list" in reverse. Instead of listing what you need, list who you can help with an introduction, visibility, information, or encouragement this month. This builds trust before you need support.'
+      ],
+      d:[
+        'Additional option: start with a three-person founder kitchen cabinet: one peer at your stage, one person two steps ahead, and one person outside your industry. Peer learning research shows that small trusted groups can reduce isolation and improve decision quality.',
+        'Out-of-the-box experiment: commit to one "borrowed audience" collaboration per month. Partner with a newsletter, neighborhood group, alumni group, supplier, or complementary business instead of trying to build every audience from scratch.'
+      ]
+    },
+    deleg:{
+      s:[
+        'Advanced option: move from task delegation to decision delegation. For one recurring area, define the decision rights, budget limit, quality standard, and escalation trigger so the other person can act without waiting for permission.',
+        'Out-of-the-box experiment: create a "mistake budget" for delegated work. Decide in advance what level of imperfection is acceptable while someone learns. Autonomy research shows that people build capability through real ownership, not perfect instructions.'
+      ],
+      g:[
+        'Additional option: use a delegation ladder. Level 1 is watch me, Level 2 is do it with me, Level 3 is do it and report back, Level 4 is own it and improve it. This makes trust gradual instead of all-or-nothing.',
+        'Out-of-the-box experiment: identify one task you secretly resent doing. That task is often a better first delegation target than the task you think is easiest, because resentment is a signal of repeated capacity drain.'
+      ],
+      d:[
+        'Additional option: build one "minimum viable SOP" this week. Record yourself doing the task once, turn the recording into five checklist steps, then let someone else test it. This lowers the documentation barrier and starts the transfer of tacit knowledge.',
+        'Out-of-the-box experiment: create a "stop doing" list before a delegation list. Name three tasks that should not be done by anyone for 30 days. Many founders are not overloaded only because work is unassigned. They are overloaded because unnecessary work is still alive.'
+      ]
+    },
+    resil:{
+      s:[
+        'Advanced option: codify your recovery system before the next setback. Write down the people, routines, numbers, and questions that help you recover quickly. Resilience research shows that prepared coping strategies are easier to access under stress than improvised ones.',
+        'Out-of-the-box experiment: run a failure pre-mortem before a major launch. Ask, "It is 90 days from now and this failed. What most likely happened?" Then design safeguards. This turns resilience into prevention, not only recovery.'
+      ],
+      g:[
+        'Additional option: use a setback triage protocol. Separate every problem into what must be handled today, what needs a decision this week, what needs emotional processing, and what can be ignored. This reduces cognitive narrowing under pressure.',
+        'Out-of-the-box experiment: create a "re-entry script" for hard moments. When you go quiet after a setback, send one prepared message to a trusted person: "I hit a setback, I am regrouping, and I need a 20-minute reality check." This interrupts isolation quickly.'
+      ],
+      d:[
+        'Additional option: start with nervous system reliability, not motivation. Pick one recovery anchor that happens at the same time daily for 30 days: sleep cutoff, walk, food, hydration, or one trusted conversation. Resilience depends on physiological capacity as much as mindset.',
+        'Out-of-the-box experiment: build a "pressure menu" with three options for low, medium, and high stress days. On low stress days you execute normally. On medium stress days you simplify. On high stress days you only protect the mission-critical next step.'
+      ]
+    },
+    vision:{
+      s:[
+        'Advanced option: translate the vision into a decision filter. Write three statements that begin, "We say yes to..." and three that begin, "We say no to..." Vision research becomes useful when it changes tradeoffs.',
+        'Out-of-the-box experiment: create a one-page "future press release" dated two years from now. Describe what changed for customers, the business, and the community. Then reverse-engineer the milestones that would make it believable.'
+      ],
+      g:[
+        'Additional option: build a strategy-on-a-page with three columns: destination, proof that we are moving, and what we will stop doing. Goal-setting research is strongest when goals are specific, challenging, and translated into behavior.',
+        'Out-of-the-box experiment: ask five customers or stakeholders what they think you are building. If their answers do not match, the vision is still living in your head more than in the market.'
+      ],
+      d:[
+        'Additional option: use a constraint-first vision exercise. Instead of asking what you want, ask what the business must never become, what customers must always feel, and what problem you refuse to ignore. This often produces a clearer vision than generic goal-setting.',
+        'Out-of-the-box experiment: create three competing 24-month futures for the business: stable, bold, and unreasonable. Choose the one that creates the most energy and the clearest decisions, then define the first 30-day proof point.'
+      ]
+    }
+  };
+
+  recommendations.push(...optionBank[cat.id][z]);
+
+  if(cat.id === 'self' && weakestQuestion.index === 2){
+    recommendations.push('Because your lowest self-leadership signal is strategic time, add one protected "future business" block each week that cannot be used for delivery, admin, or client emergencies unless revenue is at risk.');
+  }
+  if(cat.id === 'comm' && weakestQuestion.index === 1){
+    recommendations.push('Because your lowest communication signal is asking for help before crisis, create a visible "help threshold": define the exact moment when you will ask for support instead of waiting until the issue is urgent.');
+  }
+  if(cat.id === 'community' && weakestQuestion.index === 0){
+    recommendations.push('Because your lowest community signal is reaching beyond your immediate network, choose one adjacent ecosystem each month: food, wellness, education, procurement, media, tech, or neighborhood groups, and build one real relationship there.');
+  }
+  if(cat.id === 'deleg' && weakestQuestion.index === 0){
+    recommendations.push('Because your lowest delegation signal is letting go of tasks others could do, use an 80 percent rule: if someone can do it at 80 percent quality with a checklist, it should not remain permanently yours.');
+  }
+  if(cat.id === 'resil' && weakestQuestion.index === 0){
+    recommendations.push('Because your lowest resilience signal is recovery speed after setbacks, define a 48-hour recovery rule: no major retreat, cancellation, or strategic reversal until you have slept, talked to one trusted person, and written the lesson.');
+  }
+  if(cat.id === 'vision' && weakestQuestion.index === 2){
+    recommendations.push('Because your lowest vision signal is time alignment, compare your calendar against your stated priorities every Friday. Treat misalignment as data, not guilt, then remove one low-value commitment the following week.');
+  }
+
+  const self = getScoreById(scores,'self');
+  const comm = getScoreById(scores,'comm');
+  const community = getScoreById(scores,'community');
+  const deleg = getScoreById(scores,'deleg');
+  const resil = getScoreById(scores,'resil');
+  const vision = getScoreById(scores,'vision');
+
+  if(cat.id === 'deleg' && community >= 4 && deleg < 3.5){
+    recommendations.push('Pattern-based recommendation: your community score is stronger than your delegation score, which can make you the relationship hub and the bottleneck at the same time. Create a referral transfer experiment: for 30 days, route one opportunity or introduction through another trusted person before it comes back to you.');
+  }
+  if(cat.id === 'self' && vision >= 4 && self < 3.5){
+    recommendations.push('Pattern-based recommendation: your vision is stronger than your self-leadership, which often creates an implementation gap. Build a Friday vision calendar: label each hour of the week as vision, revenue, operations, admin, or recovery, then adjust next week before adding new goals.');
+  }
+  if(cat.id === 'comm' && resil >= 4 && comm < 3.5){
+    recommendations.push('Pattern-based recommendation: your resilience is stronger than your communication, which can mean you absorb stress privately while others lose visibility. Send a monthly leadership memo with decisions, lessons, risks, and what you need from others.');
+  }
+  if(cat.id === 'community' && self >= 4 && community < 3.5){
+    recommendations.push('Pattern-based recommendation: your self-leadership is stronger than your community-building, which can make you productive but under-connected. Schedule one zero-ask conversation each week with someone outside your normal circle.');
+  }
+  if(cat.id === 'vision' && deleg >= 4 && vision < 3.5){
+    recommendations.push('Pattern-based recommendation: your delegation is stronger than your vision, so people may be willing to help but unclear about the larger direction. Create a one-page strategic narrative before handing off the next meaningful project.');
+  }
+  if(cat.id === 'deleg' && comm >= 4 && deleg < 3.5){
+    recommendations.push('Pattern-based recommendation: your communication is stronger than your delegation. Use that strength to write clearer ownership agreements: what the person owns, what they can decide, when to escalate, and what success looks like.');
+  }
+  if(cat.id === 'comm' && vision >= 4 && comm < 3.5){
+    recommendations.push('Pattern-based recommendation: your vision is stronger than your communication, so the destination may be clearer to you than to others. Test your message with someone outside the business and rewrite it until they can repeat it accurately.');
+  }
+  if(cat.id === 'resil' && self < 3 && resil < 3){
+    recommendations.push('Pattern-based recommendation: both resilience and self-leadership need support, so do not start with a massive growth plan. Start with a stabilizing operating rhythm: one planning block, one recovery block, and one relationship check-in every week for 30 days.');
+  }
+
+  return recommendations.slice(0,5);
+}
+
+function formatRecommendationText(primary,cat,score,scores){
+  const extras = getAdvancedRecommendations(cat,score,scores);
+  if(!extras.length) return primary;
+  return `${primary}<br><br><strong>Additional Evidence-Based Options Based On Your Inputs:</strong><br>${extras.map((item,index)=>`${index+1}. ${item}`).join('<br><br>')}`;
+}
+
+
 function showLeadForm(){
   const n = Object.keys(answers).length;
   if(n !== totalQ) return;
@@ -629,163 +799,6 @@ function submitLeadToSpreadsheet(resultsData){
     console.warn('Spreadsheet save failed:', error);
   });
 }
-
-
-const recommendationOptions = {
-  self:{
-    s:[
-      'Add a "decision receipt" at the end of each week. Write down the three decisions you made, the reason behind each one, and what evidence would prove you wrong. This uses metacognition and implementation review to keep disciplined leaders from becoming overconfident.',
-      'Run a "calendar truth test" once a month. Label every block of time as revenue, strategy, service, admin, recovery, or avoidable friction. Then remove or redesign one repeating block that is not connected to your highest-value role.'
-    ],
-    g:[
-      'Create a "friction budget." Pick one recurring task that drains attention and spend 30 minutes redesigning the environment around it. Examples include templates, auto-replies, batching, or a standing decision rule. Behavioral design research shows context changes usually outperform willpower.',
-      'Use a "one-tab rule" for strategic work. For 45 minutes, keep only the document, spreadsheet, or tool required for the priority task open. This reduces cognitive switching cost and makes the work visible enough to complete.'
-    ],
-    d:[
-      'Build a "minimum viable operating rhythm." Choose one daily start ritual, one weekly review, and one shutdown ritual. Keep each under ten minutes. The goal is not perfection. It is giving your brain repeated cues for strategic attention.',
-      'Use a "public commitment anchor." Tell one trusted person the single business-building task you will complete this week and send proof when it is done. Accountability research shows specificity and visibility increase follow-through.'
-    ]
-  },
-  comm:{
-    s:[
-      'Create a "clarity library" of your best explanations, expectations, and feedback language. Strong communicators often repeat themselves informally. Capturing the language turns personal clarity into an asset others can reuse.',
-      'Try a "teach-back close" in important conversations. Ask the other person to repeat the decision, owner, deadline, and next step in their own words. This is used in high-reliability settings to reduce hidden misunderstanding.'
-    ],
-    g:[
-      'Start sending a Friday "decision log" to anyone affected by your work. Include what changed, what stayed the same, what is waiting, and what you need. This reduces ambiguity without requiring more meetings.',
-      'Use the "one sentence standard." For every task or request, write one sentence that defines what done means. Role clarity research shows that explicit standards reduce rework and emotional friction.'
-    ],
-    d:[
-      'Create a "no guessing rule." For two weeks, any request you make must include owner, outcome, deadline, and decision authority. This turns communication from personality into operating infrastructure.',
-      'Use a three-line repair script when confusion happens: here is what I intended, here is where I was unclear, here is the new agreement. Repair behavior strengthens trust faster than pretending the miscommunication did not happen.'
-    ]
-  },
-  community:{
-    s:[
-      'Create a "network gap map." List the five kinds of relationships your next stage requires, such as referral sources, technical helpers, funders, operators, or community validators. Strong connectors scale faster when their network is intentionally shaped, not just large.',
-      'Run a monthly "opportunity dinner" or virtual circle with three people who should know each other. No pitching. Each person shares one need and one resource. This converts social capital into practical exchange without feeling transactional.'
-    ],
-    g:[
-      'Start a "zero-ask outreach sprint." Once a week, reach out to one person with a useful article, introduction, lead, or encouragement and ask for nothing. Weak-tie research shows that opportunity often comes from these light but consistent bridges.',
-      'Build a "community bench" spreadsheet with people you trust by category. Include what they are good at, what they need, and who they should meet. This makes relationship-building concrete instead of random.'
-    ],
-    d:[
-      'Create a "three-person founder kitchen cabinet." Choose one peer, one operator, and one connector. Meet monthly with a single rule: bring the real problem, not the polished update. Peer learning research shows this reduces isolation and improves decision quality.',
-      'Use a "borrowed room strategy." Instead of building a new audience from scratch, identify three existing rooms where your customers, partners, or collaborators already gather. Contribute value there consistently for 60 days before making any ask.'
-    ]
-  },
-  deleg:{
-    s:[
-      'Move from delegation to "decision rights." For each person helping you, define what they can decide without you, what they must consult you on, and what only you decide. This prevents hidden bottlenecks while protecting quality.',
-      'Create a "failure boundary" for delegated work. Name what can go wrong safely and what cannot. Strong delegation improves when people know where they have room to learn without risking the business.'
-    ],
-    g:[
-      'Run a "founder bottleneck audit." For one week, write down every moment someone waits on you. Sort the list into decisions, approvals, information, and trust. Then remove one bottleneck with a template, rule, or handoff.',
-      'Use the "80 percent handoff." Pick one recurring task someone else can do at 80 percent of your standard. Give them the standard, one example, and a check-in point. Do not take the task back unless the risk is real.'
-    ],
-    d:[
-      'Start with "delegation by shadowing." Have someone watch you complete one task while you narrate the decisions behind it. Then they do it while you watch. This transfers judgment, not just instructions.',
-      'Create a "stop doing list" before a to-do list. Identify one activity you should no longer personally own. Under-delegation often persists because founders add help without removing responsibility from themselves.'
-    ]
-  },
-  resil:{
-    s:[
-      'Build a "resilience data file." After each setback, record trigger, response, recovery time, lesson, and next action. Over time, this shows which recovery practices actually work for you, not just what sounds healthy.',
-      'Use a "stress rehearsal" before major launches or decisions. Write down what could go wrong, what signal would show it is happening, and the first response. This keeps resilience from depending on adrenaline.'
-    ],
-    g:[
-      'Create a "first 24 hours reset card" and keep it visible. Include one body action, one connection action, and one decision action. This interrupts rumination and gives your nervous system a known path back to action.',
-      'Try a "failure debrief before the fix." Spend 15 minutes separating facts, interpretation, emotion, and next move. This reduces cognitive narrowing and helps you avoid solving the wrong problem.'
-    ],
-    d:[
-      'Build a "re-entry protocol" for hard moments. When you avoid a task, client, or decision, the next step must be tiny and visible, such as sending one email, opening the document, or asking one person for help. Avoidance shrinks through action, not analysis.',
-      'Create a "support trigger." Decide in advance what event requires you to contact a peer, advisor, or therapist, such as two missed deadlines, three nights of poor sleep, or avoiding a key conversation. This removes the burden of deciding while stressed.'
-    ]
-  },
-  vision:{
-    s:[
-      'Turn your vision into a "decision filter." Write three sentences: what you are building, who it is for, and what you will not do even if it looks attractive. Use it to accept or reject opportunities each week.',
-      'Run a "stranger clarity test." Explain the business direction to someone outside your field and ask them what they think the next three priorities are. If they cannot name them, simplify the vision language.'
-    ],
-    g:[
-      'Create a "vision-to-calendar bridge." Pick one strategic priority and assign it a recurring weekly block, a metric, and a visible owner. Goal-setting research is strongest when goals become behavior and feedback loops.',
-      'Use a "future press release" exercise. Write the headline, customer outcome, proof point, and business result you want 12 months from now. Then identify the first operational step that would make it believable.'
-    ],
-    d:[
-      'Hold a "personal board meeting" with yourself using three pages only: where the business is going, what must be true, and what you are doing that works against it. Repeat monthly until the direction becomes specific enough to guide tradeoffs.',
-      'Build a "no list" before the strategy list. Write five opportunities, services, audiences, or habits you will stop pursuing. Vision becomes clearer when the business has boundaries.'
-    ]
-  }
-};
-
-function getPatternRecommendations(scores){
-  const byId = {};
-  scores.forEach(s => byId[s.cat.id] = s.score);
-  const recs = [];
-
-  if(byId.community >= 4 && byId.deleg < 3){
-    recs.push('Pattern insight: Your community strength may be creating opportunity flow that still routes through you. Try a 30-day referral transfer experiment. Every introduction, partnership request, or opportunity first gets routed to a trusted collaborator or simple intake form before it reaches your calendar.');
-  }
-  if(byId.vision >= 4 && byId.self < 3){
-    recs.push('Pattern insight: Your direction is stronger than your operating rhythm. Build a weekly vision calendar. Each Friday, label the prior week as vision, revenue, service, admin, or avoidable friction. Then move one hour from friction to vision before Monday starts.');
-  }
-  if(byId.resil >= 4 && byId.comm < 3){
-    recs.push('Pattern insight: You may recover internally faster than people around you can read what is happening. Send a monthly leadership memo with decisions, lessons, risks, and what you need. This turns private resilience into shared trust.');
-  }
-  if(byId.self >= 4 && byId.community < 3){
-    recs.push('Pattern insight: Your discipline is strong, but the business may be underusing social capital. Schedule one zero-ask conversation each week with someone outside your usual circle. No pitch, no favor, no immediate transaction. Only curiosity and connection.');
-  }
-  if(byId.deleg >= 4 && byId.vision < 3){
-    recs.push('Pattern insight: You may be ready to hand off work before the destination is clear enough. Create a one-page strategic narrative for the next 24 months and attach every delegated task to one sentence from that narrative.');
-  }
-  if(byId.comm >= 4 && byId.deleg < 3){
-    recs.push('Pattern insight: You may be clear with people but still holding too much yourself. Turn your next clear explanation into a reusable handoff. Record a five-minute screen walkthrough, give the standard, then let someone else own the next repeat.');
-  }
-  if(byId.resil < 3 && byId.self < 3){
-    recs.push('Pattern insight: This is a capacity protection issue before it is a productivity issue. Pick one daily recovery input and one daily strategic input for 14 days. Keep both small enough that you can complete them on your worst reasonable day.');
-  }
-  if(byId.community >= 4 && byId.vision >= 4 && byId.deleg < 3.5){
-    recs.push('Pattern insight: You can attract people to a direction, but the next level is shared ownership. Create a contributor map with three columns: who believes in the vision, what they can own, and what decision they can make without you.');
-  }
-
-  return recs;
-}
-
-function buildNextSteps(catId,z,scores,baseRecommendation){
-  const options = recommendationOptions[catId] && recommendationOptions[catId][z] ? recommendationOptions[catId][z] : [];
-  const patternOptions = getPatternRecommendations(scores).filter(text => {
-    if(catId === 'community') return text.includes('community') || text.includes('social capital') || text.includes('referral') || text.includes('zero-ask') || text.includes('contributors');
-    if(catId === 'deleg') return text.includes('delegated') || text.includes('handoff') || text.includes('holding') || text.includes('shared ownership') || text.includes('decision');
-    if(catId === 'vision') return text.includes('vision') || text.includes('direction') || text.includes('strategic narrative') || text.includes('24 months');
-    if(catId === 'self') return text.includes('operating rhythm') || text.includes('calendar') || text.includes('discipline') || text.includes('productivity') || text.includes('strategic input');
-    if(catId === 'comm') return text.includes('memo') || text.includes('clear') || text.includes('communication') || text.includes('trust');
-    if(catId === 'resil') return text.includes('resilience') || text.includes('recover') || text.includes('capacity') || text.includes('recovery');
-    return false;
-  }).slice(0,1);
-
-  const all = [baseRecommendation].concat(options).concat(patternOptions);
-  return all.map((text,index)=>{
-    const label = index === 0 ? 'Primary recommendation' : index === 1 ? 'Additional evidence-based option' : index === 2 ? 'Out-of-the-box experiment' : 'Pattern-based recommendation';
-    return `<div style="margin-bottom:.55rem"><strong>${label}:</strong> ${text}</div>`;
-  }).join('');
-}
-
-function buildPriorityActions(focusAreas,scores){
-  const patternRecs = getPatternRecommendations(scores).slice(0,2);
-  const focusItems = focusAreas.map((s,i)=>{
-    const z = getZone(s.score);
-    const base = feedback[s.cat.id][z].improve;
-    const extra = recommendationOptions[s.cat.id] && recommendationOptions[s.cat.id][z] ? recommendationOptions[s.cat.id][z][0] : '';
-    return `<div class="action-item"><div class="action-num">${i+1}</div><div><strong>${s.cat.label}:</strong> ${base}${extra ? ' '+extra : ''}</div></div>`;
-  });
-
-  const patternItems = patternRecs.map((text,i)=>{
-    return `<div class="action-item"><div class="action-num">${focusItems.length+i+1}</div><div><strong>Pattern-Based Action:</strong> ${text}</div></div>`;
-  });
-
-  return focusItems.concat(patternItems).join('');
-}
-
 
 function showResults(){
   document.getElementById('assessment').style.display = 'none';
@@ -856,14 +869,18 @@ function showResults(){
       </div>
       <div class="fb-section">
         <div class="fb-label"><i class="ti ti-arrow-right" aria-hidden="true"></i>What to do next</div>
-        <div class="fb-text">${buildNextSteps(cat.id,z,scores,fb.improve)}</div>
+        <div class="fb-text">${formatRecommendationText(fb.improve,cat,score,scores)}</div>
       </div>
       <div class="research-tag">Research basis: ${fb.research}</div>
     </div>`;
     catContainer.appendChild(block);
   });
 
-  const actionItems = buildPriorityActions(focusAreas,scores);
+  const actionItems = focusAreas.map((s,i)=>{
+    const z = getZone(s.score);
+    const act = feedback[s.cat.id][z].improve;
+    return `<div class="action-item"><div class="action-num">${i+1}</div><div><strong>${s.cat.label}:</strong> ${act}</div></div>`;
+  }).join('');
   document.getElementById('actionsCard').innerHTML = `<div class="actions-title"><i class="ti ti-list-check" aria-hidden="true" style="font-size:15px;color:#534AB7"></i>Your highest-leverage actions</div>${actionItems}`;
 
   window.currentLeadershipResults = buildResultsData(scores,pct,prof,displayStrengths,focusAreas);
